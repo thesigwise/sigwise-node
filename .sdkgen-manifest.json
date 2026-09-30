@@ -1,0 +1,16 @@
+{
+  "generator": "generate-sdk",
+  "language": "node",
+  "version": "1.0.0",
+  "files": [
+    ".gitignore",
+    "README.md",
+    "package.json",
+    "src/core.ts",
+    "src/index.ts",
+    "src/models.ts",
+    "src/resources.ts",
+    "src/webhooks.ts",
+    "tsconfig.json"
+  ]
+}
