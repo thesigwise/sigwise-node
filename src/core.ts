@@ -2,7 +2,7 @@
 
 import { createHmac, randomBytes } from "node:crypto";
 
-export const VERSION = "1.0.0";
+export const VERSION = "1.0.1";
 export const DEFAULT_BASE_URL = "https://api.sigwise.ai";
 
 /** How long each request token is valid for, in seconds (the API allows 300). */
