@@ -212,6 +212,22 @@ export interface IngestRequest {
   include_history?: boolean;
 }
 
+/** The totals of a bulk run, on the entry that stands for it with `group=batch`. */
+export interface LedgerBatch {
+  /** How many charges the run has. */
+  count: number;
+  /** The run's total, in micro-dollars (negative). */
+  delta_micros: number;
+  input_tokens: number;
+  output_tokens: number;
+  /** How many distinct models the run was billed for. */
+  models: number;
+  /** One of the models; the only one when `models` is 1. */
+  model?: string;
+  /** When the run's first charge was made. */
+  first_at: string;
+}
+
 export interface LedgerEntry {
   id: string;
   /**
@@ -232,6 +248,13 @@ export interface LedgerEntry {
   output_tokens?: number;
   /** The Stripe Checkout Session that paid for a top-up. */
   payment_ref?: string;
+  /**
+   * Shared by the charges of one bulk run (re-analyzing all objects, or a signal backfill).
+   * Absent for a single object's analysis and for credits.
+   */
+  batch_id?: string;
+  /** The totals of a bulk run, on the entry that stands for it with `group=batch`. */
+  batch?: LedgerBatch;
   created_at: string;
 }
 
@@ -316,6 +339,29 @@ export interface Overview {
   signal_summary: SignalSummary[];
   categories: CategoryCount[];
   top_risk: RiskyObject[];
+}
+
+export interface PlaygroundRequest {
+  /** Optional classification, e.g. `user` or `listing`. */
+  object_type?: string;
+  events: EventInput[];
+  /** Score only these signal keys. Omit to score every enabled signal. */
+  signals?: string[];
+}
+
+export interface PlaygroundResult {
+  /** False when no enabled signal matched, so nothing was scored. */
+  analyzed: boolean;
+  /** The model that produced the answers, e.g. `model-1`. */
+  model: string;
+  latency_ms: number;
+  answers: Answer[];
+  /** What the run was charged, in millionths of a US dollar. */
+  cost_micros: number;
+  /** How many events were scored. */
+  events_count: number;
+  /** Why nothing was analyzed, when `analyzed` is false. */
+  reason?: string;
 }
 
 /** One of the objects with the highest yes/no probabilities. */

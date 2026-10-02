@@ -143,6 +143,13 @@ An object is anything you want answers about: a user, a listing, an order.
 - `sigwise.objects.analyze(objectId: string, options?: RequestOptions)`  
   `POST /v1/objects/{object_id}/analyze`: Re-analyze an object
 
+### playground
+
+Events and messages are the evidence an object's answers are computed from.
+
+- `sigwise.playground.run(body: PlaygroundRequest, options?: RequestOptions)`  
+  `POST /v1/playground`: Try signals on sample events
+
 ### events
 
 Events and messages are the evidence an object's answers are computed from.

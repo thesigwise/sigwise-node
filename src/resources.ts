@@ -45,6 +45,10 @@ export interface ListLedgerParams {
   /** Only credits (funds added) or only charges (analyses). */
   type?: "credit" | "charge";
   limit?: number;
+  /** `batch` lists each bulk run once, as its newest charge with the run's totals in `batch`. */
+  group?: "batch";
+  /** Only the charges of this bulk run. */
+  batch_id?: string;
   cursor?: string;
 }
 
@@ -201,6 +205,40 @@ export class ObjectsResource {
         method: "POST",
         path: "/v1/objects/{object_id}/analyze",
         pathParams: { object_id: objectId },
+      },
+      options,
+    );
+  }
+}
+
+/** Events and messages are the evidence an object's answers are computed from. */
+export class PlaygroundResource {
+  constructor(private readonly core: Core) {}
+
+  /**
+   * Try signals on sample events.
+   *
+   * Scores sample events against your enabled signals and returns the answers, **without
+   * recording anything**: no object is created, the events and answers are not stored, and
+   * no rule or webhook fires. Use it to check how your signals judge content before you send
+   * real traffic, or after you change a signal's instructions.
+   *
+   * The events are scored on their own, with no history. Restrict the run to some signals
+   * with `signals`. At most 50 events per run.
+   *
+   * The analysis is real, so it is charged to your balance like any other and counted as a
+   * synchronous analysis in your usage. Returns `402` when the balance is empty, `429` when
+   * the account already has the maximum number of synchronous analyses in flight, and `503`
+   * with `analyzer_busy` when the analyzer is throttling.
+   *
+   * `POST /v1/playground`
+   */
+  run(body: T.PlaygroundRequest, options?: RequestOptions): Promise<T.PlaygroundResult> {
+    return this.core.request<T.PlaygroundResult>(
+      {
+        method: "POST",
+        path: "/v1/playground",
+        body,
       },
       options,
     );
