@@ -1,7 +1,7 @@
 {
   "generator": "generate-sdk",
   "language": "node",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "files": [
     ".github/workflows/publish.yml",
     ".gitignore",

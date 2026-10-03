@@ -1,6 +1,6 @@
 {
   "name": "@sigwise/node",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "SigWise API client for Node.js",
   "license": "MIT",
   "repository": {
