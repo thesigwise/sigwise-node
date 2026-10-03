@@ -16,7 +16,7 @@ npm install @sigwise/node
 ```ts
 import { SigWise } from "@sigwise/node";
 
-// Reads ANALYZE_API_KEY and ANALYZE_SECRET when called without options.
+// Reads SIGWISE_API_KEY and SIGWISE_SECRET when called without options.
 const sigwise = new SigWise({ apiKey: "your_key_id", secret: "your_secret" });
 
 // Configure what you want to know about your objects.
@@ -53,8 +53,8 @@ Create an API key in the console. It is a pair: a public key ID and a
 signing secret (`your_secret`, shown once). The client sends the key ID with every
 request and signs a short-lived HS256 token with the secret, bound to the
 request's method and path. The secret itself is never sent, so keep it on your
-server. Without explicit options the client reads `ANALYZE_API_KEY`,
-`ANALYZE_SECRET` and `ANALYZE_BASE_URL` from the environment.
+server. Without explicit options the client reads `SIGWISE_API_KEY`,
+`SIGWISE_SECRET` and `SIGWISE_BASE_URL` from the environment.
 
 ## Configuration
 
@@ -62,7 +62,7 @@ server. Without explicit options the client reads `ANALYZE_API_KEY`,
 const sigwise = new SigWise({
   apiKey: "your_key_id",
   secret: "your_secret",
-  baseUrl: "http://localhost:8080", // default: ANALYZE_BASE_URL or the production API
+  baseUrl: "http://localhost:8080", // default: SIGWISE_BASE_URL or the production API
   timeout: 10_000,                  // per attempt, ms
   maxRetries: 3,                    // idempotent requests only
 });
@@ -105,7 +105,7 @@ const event = constructWebhookEvent(
   rawBody,
   req.headers["x-webhook-signature"],
   req.headers["x-webhook-timestamp"],
-  process.env.ANALYZE_WEBHOOK_SECRET!,
+  process.env.SIGWISE_WEBHOOK_SECRET!,
 );
 if (event.event === "analysis.completed") {
   console.log(event.object_id, event.answers);
