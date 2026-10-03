@@ -2,21 +2,21 @@
 
 import { createHmac, randomBytes } from "node:crypto";
 
-export const VERSION = "1.0.1";
+export const VERSION = "1.0.2";
 export const DEFAULT_BASE_URL = "https://api.sigwise.ai";
 
 /** How long each request token is valid for, in seconds (the API allows 300). */
 const TOKEN_TTL_SECONDS = 60;
 
 export interface ClientOptions {
-  /** The API key ID. Defaults to the `ANALYZE_API_KEY` environment variable. */
+  /** The API key ID. Defaults to the `SIGWISE_API_KEY` environment variable. */
   apiKey?: string;
   /**
-   * The API key's signing secret. Defaults to `ANALYZE_SECRET`. It
+   * The API key's signing secret. Defaults to `SIGWISE_SECRET`. It
    * signs a short-lived token for every request and is never sent itself.
    */
   secret?: string;
-  /** Defaults to `ANALYZE_BASE_URL`, then `https://api.sigwise.ai`. */
+  /** Defaults to `SIGWISE_BASE_URL`, then `https://api.sigwise.ai`. */
   baseUrl?: string;
   /** Per-attempt timeout in milliseconds. Default 30000. */
   timeout?: number;
@@ -122,16 +122,16 @@ export class Core {
 
   constructor(options: ClientOptions = {}) {
     const env = typeof process !== "undefined" ? process.env : {};
-    const apiKey = options.apiKey ?? env.ANALYZE_API_KEY;
-    const secret = options.secret ?? env.ANALYZE_SECRET;
+    const apiKey = options.apiKey ?? env.SIGWISE_API_KEY;
+    const secret = options.secret ?? env.SIGWISE_SECRET;
     if (!apiKey || !secret) {
       throw new Error(
-        "SigWise: an API key and its secret are required. Pass { apiKey, secret } or set ANALYZE_API_KEY and ANALYZE_SECRET.",
+        "SigWise: an API key and its secret are required. Pass { apiKey, secret } or set SIGWISE_API_KEY and SIGWISE_SECRET.",
       );
     }
     this.apiKey = apiKey;
     this.secret = secret;
-    this.baseUrl = (options.baseUrl ?? env.ANALYZE_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
+    this.baseUrl = (options.baseUrl ?? env.SIGWISE_BASE_URL ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
     this.timeout = options.timeout ?? 30_000;
     this.maxRetries = options.maxRetries ?? 2;
     this.headers = options.headers ?? {};
