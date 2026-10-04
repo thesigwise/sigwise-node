@@ -172,6 +172,29 @@ export class ObjectsResource {
   }
 
   /**
+   * Delete an object's data.
+   *
+   * Deletes everything stored about the object: its events, answers, rolling summary, queued
+   * analysis, rule state and firings, and webhook deliveries. Use it when one of your users
+   * asks to be forgotten.
+   *
+   * Billing ledger entries keep the object id as financial records. The object reappears
+   * only if you send new events for it.
+   *
+   * `DELETE /v1/objects/{object_id}`
+   */
+  delete(objectId: string, options?: RequestOptions): Promise<void> {
+    return this.core.request<void>(
+      {
+        method: "DELETE",
+        path: "/v1/objects/{object_id}",
+        pathParams: { object_id: objectId },
+      },
+      options,
+    );
+  }
+
+  /**
    * Get an object's compacted history.
    *
    * Older events are folded into a rolling summary so the analyzer gets a bounded payload
@@ -270,6 +293,11 @@ export class EventsResource {
    * recorded either way, so don't resend them: after `Retry-After`, request an analysis with
    * `POST /v1/objects/{object_id}/analyze` and read the answers with `GET
    * /v1/objects/{object_id}` or by webhook.
+   *
+   * **Event retention.** With `event_retention` `after_analysis` (see `PATCH /v1/settings`),
+   * a synchronous request's events are scored in memory and never written, so after an error
+   * nothing is recorded: resend the request (the `Idempotency-Key` is released for it).
+   * Asynchronous events are stored only until their analysis has read them.
    *
    * **Safe retries.** Send an `Idempotency-Key` header (any unique string, such as a UUID)
    * and retry with the same key after a timeout or a `5xx`: the events are recorded once. A
@@ -445,6 +473,10 @@ export class SettingsResource {
    * Update tenant settings.
    *
    * Omitted fields are left unchanged.
+   *
+   * Limiting `event_retention` (`days` or `after_analysis`) also removes the sample message
+   * text kept in every object's rolling summary, since the summary outlives the events it
+   * was built from.
    *
    * `PATCH /v1/settings`
    */
