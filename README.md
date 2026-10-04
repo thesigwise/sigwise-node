@@ -156,6 +156,8 @@ An object is anything you want answers about: a user, a listing, an order.
   `GET /v1/objects`: List objects
 - `sigwise.objects.get(objectId: string, options?: RequestOptions)`  
   `GET /v1/objects/{object_id}`: Get an object's analysis
+- `sigwise.objects.delete(objectId: string, options?: RequestOptions)`  
+  `DELETE /v1/objects/{object_id}`: Delete an object's data
 - `sigwise.objects.getState(objectId: string, options?: RequestOptions)`  
   `GET /v1/objects/{object_id}/state`: Get an object's compacted history
 - `sigwise.objects.analyze(objectId: string, options?: RequestOptions)`  
