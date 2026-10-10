@@ -296,7 +296,7 @@ export interface ModerationVerdict {
   /** False when no configured signal matched, so nothing was scored. */
   analyzed: boolean;
   history_included: boolean;
-  /** The model that produced the answers, e.g. `model-1`. */
+  /** The model that produced the answers, e.g. `jev-1.13.0`. */
   model: string;
   latency_ms: number;
   answers: Answer[];
@@ -363,7 +363,7 @@ export interface PlaygroundRequest {
 export interface PlaygroundResult {
   /** False when no enabled signal matched, so nothing was scored. */
   analyzed: boolean;
-  /** The model that produced the answers, e.g. `model-1`. */
+  /** The model that produced the answers, e.g. `jev-1.13.0`. */
   model: string;
   latency_ms: number;
   answers: Answer[];
